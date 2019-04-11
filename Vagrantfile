@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   # General VM settings
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.synced_folder ".", "/vagrant",
-    smb_password: "notchsono88", smb_username: "henry"
+    smb_username: "henry"
 
   # Master settings
   config.vm.define :master do |master|
@@ -33,20 +33,7 @@ Vagrant.configure("2") do |config|
     master.vm.provider :hyperv do |h|
         h.vmname = :master 
     end
-  
-    bootstrap_script = <<-EOF
-    if which puppet > /dev/null 2>&1; then
-      echo 'Puppet Installed.'
-    else
-      wget https://apt.puppetlabs.com/puppet6-release-xenial.deb
-      dpkg -i puppet6-release-xenial.deb
-      apt-get update
-      apt-get --assume-yes install puppetserver
-      sed -i 's/JAVA_ARGS=.*/JAVA_ARGS="-Xms512m -Xmx512m"/g' /etc/default/puppetserver
-      systemctl start puppetserver
-    fi
-    EOF
-    master.vm.provision :shell, :inline => bootstrap_script
+    master.vm.provision :shell, :path => "install_puppetserver.sh"
   end 
 
   # Worker settings 
@@ -56,6 +43,7 @@ Vagrant.configure("2") do |config|
       worker.vm.provider :hyperv do |h|
           h.vmname = name 
       end
+      worker.vm.provision :shell, :path => "install_puppetagent.sh"
     end
   end
 
