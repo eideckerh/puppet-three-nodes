@@ -23,13 +23,14 @@ Vagrant.configure("2") do |config|
   end
 
   # General VM settings
+  # smb_username needs to be modified to match your local user
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.synced_folder ".", "/vagrant",
     smb_username: "henry"
 
   # Master settings
   config.vm.define :master do |master|
-    master.vm.hostname = :master 
+    master.vm.hostname = :puppet 
     master.vm.provider :hyperv do |h|
         h.vmname = :master 
     end

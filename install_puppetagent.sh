@@ -9,7 +9,7 @@ else
     apt-get update
     apt-get --assume-yes install puppet-agent
     echo "[main]" >> $conf
-    echo "server = master" >> $conf 
+    echo "server = puppet" >> $conf 
     /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
     echo 'Puppet agent installation finished'
 fi
